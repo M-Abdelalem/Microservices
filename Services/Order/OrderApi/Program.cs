@@ -14,4 +14,4 @@ if (app.Environment.IsDevelopment())
 }
 app.UseMediatR();
 app.UseInfrastructure();
-app.Run(); 
+app.Run();  
