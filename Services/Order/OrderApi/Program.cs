@@ -17,3 +17,5 @@ app.UseMediatR();
 app.UseInfrastructure();
 
 app.Run();  
+
+
