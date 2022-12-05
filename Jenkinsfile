@@ -13,6 +13,7 @@ String targetServerIP = "0.0.0.0"
 String iisApplicationBackup = "D:\\Microservices_Backup"
 
 node () {
+try{
     stage('Checkout') {
         checkout([
             $class: 'GitSCM', 
@@ -55,4 +56,13 @@ remoteDirectorySDF: false, removePrefix: '', sourceFiles: '/Services/Order/Order
         rmdir ${iisApplicationPath}\\${publishedPath}\\  /q /s
 
         """}
+}
+catch (err) {
+stage('rollback') 
+{
+        bat """
+        powershell expand-archive -Path ${iisApplicationBackup}\\Micro_Backup.zip -DestinationPath ${iisApplicationPath} -Force
+        """
+}
+}
 }
