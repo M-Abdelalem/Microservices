@@ -31,7 +31,7 @@ node () {
         """
     }
 
-stage('Backup')
+stage('Backup') 
 {
         bat """
         powershell Compress-Archive -Path ${iisApplicationPath}\\* -DestinationPath ${iisApplicationBackup}\\Micro_Backup.zip -force
