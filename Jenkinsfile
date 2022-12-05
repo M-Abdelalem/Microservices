@@ -13,7 +13,6 @@ String targetServerIP = "0.0.0.0"
 String iisApplicationBackup = "D:\\Microservices_Backup"
 
 node () {
-      agent any
     stage('Checkout') {
         checkout([
             $class: 'GitSCM', 
