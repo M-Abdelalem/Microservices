@@ -56,12 +56,6 @@ remoteDirectorySDF: false, removePrefix: '', sourceFiles: '/Services/Order/Order
         rmdir ${iisApplicationPath}\\${publishedPath}\\  /q /s
 
         """}
-    stage('rollback') 
-{
-        bat """
-        powershell expand-archive -Path ${iisApplicationBackup}\\Micro_Backup.zip -DestinationPath ${iisApplicationPath} -Force
-        """
-}
 }
 catch (err) {
 stage('rollback') 
@@ -71,4 +65,7 @@ stage('rollback')
         """
 }
 }
+    finally {
+echo "done"
+          }
 }
