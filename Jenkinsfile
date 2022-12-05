@@ -53,6 +53,5 @@ remoteDirectorySDF: false, removePrefix: '', sourceFiles: '/Services/Order/Order
         xcopy ${iisApplicationPath}\\${publishedPath}\\ ${iisApplicationPath}\\ /S   /Y 
         rmdir ${iisApplicationPath}\\${publishedPath}\\  /q /s
 
-        """
-}   
+        """}   
 }
