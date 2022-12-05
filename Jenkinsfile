@@ -14,9 +14,6 @@ String iisApplicationBackup = "D:\\Microservices_Backup"
 
 node () {
       agent any
-  triggers {
-    githubPush()
-  }
     stage('Checkout') {
         checkout([
             $class: 'GitSCM', 
