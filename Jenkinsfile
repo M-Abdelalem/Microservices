@@ -29,6 +29,7 @@ node () {
         dotnet publish -c Release --no-build
         """
     }
+    
 stage('Backup') 
 {
         bat """
