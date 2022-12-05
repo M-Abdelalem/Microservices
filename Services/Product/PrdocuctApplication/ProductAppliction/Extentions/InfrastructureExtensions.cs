@@ -7,7 +7,6 @@ public static class InfrastructureExtensions
 {
     public static WebApplicationBuilder AddInfrastructure(this WebApplicationBuilder webApplicationBuilder)
     {
-        webApplicationBuilder.Services.AddTransient<LoggingService>();
         webApplicationBuilder.AddMediatR();
         webApplicationBuilder.AddHealthCheck();
         webApplicationBuilder.AddAuthoriz();
@@ -25,6 +24,7 @@ public static class InfrastructureExtensions
     }
     public static WebApplication UseInfrastructure(this WebApplication app)
     {
+        app.UseMiddleware(typeof(ErrorHandlingMiddleware));
         app.UseCors("CorsPolicy");
         app.UseHttpsRedirection();
         app.MapControllers();
