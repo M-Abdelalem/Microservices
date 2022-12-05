@@ -28,7 +28,7 @@ public static class InfrastructureExtensions
         app.UseCors("CorsPolicy");
         app.UseHttpsRedirection();
         app.MapControllers();
-        app.UseAuthoriz();
+        app.UseAuthoriz(); 
         return app;
     }
 }
