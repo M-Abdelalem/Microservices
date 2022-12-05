@@ -1,4 +1,4 @@
-String githubUrl = "https://github.com/ahmd-abdelnaby/Microservices"
+String githubUrl = "https://github.com/M-Abdelalem/Microservices/"
 
 String projectName = "Microservices\\Services\\Order\\OrderApi"
 
