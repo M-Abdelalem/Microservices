@@ -68,6 +68,5 @@ stage('rollback')
 }
  finally {
 echo "done"
-          
     }
 }
