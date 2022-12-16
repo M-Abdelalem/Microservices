@@ -10,29 +10,70 @@ trigger:
   paths:
     exclude:
       - 'services/*'
-pool:
-  vmImage: 'windows-latest'
-
 variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  IISWebsiteName: 'GateWay'
+stages:
+  - stage: BuildWebsite
+    displayName: 'Deploy website' 
+    pool:
+      vmImage: 'windows-latest'
 
-steps:
-- task: NuGetToolInstaller@1
+      -jobs:
+      steps:
+       - task: NuGetToolInstaller@1
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+       - task: NuGetCommand@2
+         inputs:
+          restoreSolution: '$(solution)'
+       - task: VSBuild@1
+         inputs:
+           solution: '$(solution)'
+           msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+           platform: '$(buildPlatform)'
+           configuration: '$(buildConfiguration)'
 
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+       - task: VSTest@2
+         inputs:
+           platform: '$(buildPlatform)'
+           configuration: '$(buildConfiguration)'
+  - stage: DeployWebsite
+    displayName: 'Deploy website'
+    pool:
+      vmImage: windows-latest
+    jobs:
+    - deployment: DeployWebsite
+      displayName: 'Deploy website'
+      environment: 'MOHAMED-A-ALEEM'
+      strategy:
+       runOnce:
+           deploy:
+            steps:
+                - checkout: none                
+                - task: IISWebAppManagementOnMachineGroup@0
+                  name: 'StopIIS'
+                  displayName: 'Stop IIS website'
+                  inputs:
+                    IISDeploymentType: 'IISWebsite'
+                    ActionIISWebsite: 'StopWebsite'
+                    StartStopWebsiteName: '${{ variables.IISWebsiteName }}'
 
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+                - script: echo $(Pipeline.Workspace)\buildPipeline\AzureTestProject\RoundTheCode.AzureTestProject
+                - task: IISWebAppDeploymentOnMachineGroup@0
+                  name: 'DeployIIS'
+                  displayName: 'Deploy IIS website'                
+                  inputs:
+                    WebSiteName: '${{ variables.IISWebsiteName }}'
+                    Package: '$(Pipeline.Workspace)\buildPipeline\AzureTestProject\RoundTheCode.AzureTestProject'
+                    TakeAppOfflineFlag: true
+                
+                - task: IISWebAppManagementOnMachineGroup@0
+                  name: 'StartIIS'
+                  displayName: 'Start IIS website'                     
+                  inputs:
+                    IISDeploymentType: 'IISWebsite'
+                    ActionIISWebsite: 'StartWebsite'
+                    StartStopWebsiteName: '${{ variables.IISWebsiteName }}'
+
