@@ -20,8 +20,6 @@ stages:
     displayName: 'Deploy website' 
     pool:
       vmImage: 'windows-latest'
-
-      -jobs:
       steps:
        - task: NuGetToolInstaller@1
 
