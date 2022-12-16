@@ -17,7 +17,7 @@ variables:
   IISWebsiteName: 'GateWay'
 stages:
   - stage: BuildWebsite
-    displayName: 'Deploy website' 
+    displayName: 'Build website' 
     pool:
       vmImage: 'windows-latest'
     jobs:
