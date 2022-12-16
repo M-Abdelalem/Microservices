@@ -56,6 +56,7 @@ stages:
                   name: 'StopIIS'
                   displayName: 'Stop IIS website'
                   inputs:
+                    EnableIIS: true
                     IISDeploymentType: 'IISWebsite'
                     ActionIISWebsite: 'StopWebsite'
                     StartStopWebsiteName: '${{ variables.IISWebsiteName }}'
