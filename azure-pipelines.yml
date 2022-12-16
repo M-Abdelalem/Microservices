@@ -54,7 +54,7 @@ stages:
                 - checkout: none
                 - task: DownloadFileshareArtifacts@1
                   inputs:
-                    filesharePath: '$(Pipeline.Workspace)\buildPipeline\Microservices\Gateway\Gateway'
+                    filesharePath: '\buildPipeline\Microservices\Gateway\Gateway'
                     artifactName: 'Gateway'
                     downloadPath: '$(System.ArtifactsDirectory)'
                 - task: IISWebAppManagementOnMachineGroup@0
