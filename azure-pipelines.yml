@@ -55,7 +55,11 @@ stages:
                 - download: 'buildPipeline'
                   name: 'DownloadBuildArtifacts'
                   displayName: 'Download Build Artifacts'
-                  artifact: 'Gateway'               
+                  artifact: 'Gateway' 
+                - task: PublishBuildArtifacts@1    
+                  displayName: 'Publish Artifact: drop'
+                  inputs:
+                    PathtoPublish: '$(build.artifactstagingdirectory)'              
                 - task: IISWebAppManagementOnMachineGroup@0
                   name: 'StopIIS'
                   displayName: 'Stop IIS website'
