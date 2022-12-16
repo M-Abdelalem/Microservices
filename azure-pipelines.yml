@@ -52,10 +52,20 @@ stages:
            deploy:
             steps:
                 - checkout: none
-                - task: DownloadFileshareArtifacts@1
+                - task: PublishBuildArtifacts@1    
+                  displayName: 'Publish Artifact: drop'
+                  name: 'drop'
                   inputs:
-                    filesharePath: '\buildPipeline\Microservices\Gateway\Gateway'
-                    artifactName: 'Gateway'
+                    PathtoPublish: '$(build.artifactstagingdirectory)'
+                - download: 'buildPipeline'
+                  name: 'DownloadBuildArtifacts'
+                  displayName: 'Download Build Artifacts'
+                  artifact: 'AzureTestProject'
+                - task: DownloadBuildArtifacts@1
+                  inputs:
+                    buildType: 'current'
+                    downloadType: 'single'
+                    artifactName: 'drop'
                     downloadPath: '$(System.ArtifactsDirectory)'
                 - task: IISWebAppManagementOnMachineGroup@0
                   name: 'StopIIS'
