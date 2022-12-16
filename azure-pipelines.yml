@@ -55,7 +55,7 @@ stages:
                 - download: 'buildPipeline'
                   name: 'DownloadBuildArtifacts'
                   displayName: 'Download Build Artifacts'
-                  artifact: '${{ variables.IISWebsiteName }}'               
+                  artifact: 'Gateway'               
                 - task: IISWebAppManagementOnMachineGroup@0
                   name: 'StopIIS'
                   displayName: 'Stop IIS website'
