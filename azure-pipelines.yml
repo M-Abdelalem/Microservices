@@ -62,7 +62,8 @@ stages:
                   displayName: Download package assets
                   inputs:
                     artifactName: 'drop'
-                    downloadPath: $(Build.ArtifactStagingDirectory)/bin/obj/packages
+                    downloadPath: $(Build.ArtifactsDirectory)
+                    buildType: 'current'
                 - task: IISWebAppManagementOnMachineGroup@0
                   name: 'StopIIS'
                   displayName: 'Stop IIS website'
