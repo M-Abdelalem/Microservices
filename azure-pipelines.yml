@@ -57,10 +57,6 @@ stages:
                     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
                     ArtifactName: 'drop'
                     publishLocation: 'Container'
-                - download: 'buildPipeline'
-                  name: 'DownloadBuildArtifacts'
-                  displayName: 'Download Build Artifacts'
-                  artifact: 'AzureTestProject'
                 - task: DownloadBuildArtifacts@1
                   inputs:
                     buildType: 'current'
