@@ -44,7 +44,7 @@ stages:
              contents: '**'
              targetFolder: '$(Build.ArtifactStagingDirectory)'
 
-         - publish: '$(Build.ArtifactStagingDirectory)/drop/Microservices/Gateway/Gateway'
+         - publish: '$(Build.ArtifactStagingDirectory)/drop/'
            displayName: 'Publish '
            artifact: drop
   
