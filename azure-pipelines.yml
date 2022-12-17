@@ -52,11 +52,11 @@ stages:
            deploy:
             steps:
                 - checkout: none
-                - task: PublishBuildArtifacts@1    
-                  displayName: 'Publish Artifact: drop'
-                  name: 'drop'
+                - task: PublishBuildArtifacts@1
                   inputs:
-                    PathtoPublish: '$(build.artifactstagingdirectory)'
+                    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+                    ArtifactName: 'drop'
+                    publishLocation: 'Container'
                 - download: 'buildPipeline'
                   name: 'DownloadBuildArtifacts'
                   displayName: 'Download Build Artifacts'
