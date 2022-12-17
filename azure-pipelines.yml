@@ -87,13 +87,13 @@ stages:
                     StartStopWebsiteName: '${{ variables.IISWebsiteName }}'
                     EnableIIS: true
               
-                - script: echo $(Pipeline.Workspace)\buildPipeline\Microservices\Gateway\Gateway
+                - script: echo $(Pipeline.Workspace)\drop\Microservices\Gateway\Gateway
                 - task: IISWebAppDeploymentOnMachineGroup@0
                   name: 'DeployIIS'
                   displayName: 'Deploy IIS website'                
                   inputs:
                     WebSiteName: '${{ variables.IISWebsiteName }}'
-                    Package: '$(Pipeline.Workspace)\buildPipeline\Microservices\Gateway\Gateway'
+                    Package: '$(Pipeline.Workspace)\drop\Microservices\Gateway\Gateway'
                     TakeAppOfflineFlag: true
                 
                 - task: IISWebAppManagementOnMachineGroup@0
