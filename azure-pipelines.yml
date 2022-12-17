@@ -62,7 +62,7 @@ stages:
                     buildType: 'current'
                     downloadType: 'single'
                     artifactName: 'drop'
-                    downloadPath: '$(System.ArtifactsDirectory)'
+                    downloadPath: '$(Build.ArtifactStagingDirectory)'
                 - task: IISWebAppManagementOnMachineGroup@0
                   name: 'StopIIS'
                   displayName: 'Stop IIS website'
