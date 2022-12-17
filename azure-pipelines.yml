@@ -69,6 +69,7 @@ stages:
                     IISDeploymentType: 'IISWebsite'
                     ActionIISWebsite: 'StopWebsite'
                     StartStopWebsiteName: '${{ variables.IISWebsiteName }}'
+                    EnableIIS: true
 
                 - script: echo $(Pipeline.Workspace)\buildPipeline\Microservices\Gateway\Gateway
                 - task: IISWebAppDeploymentOnMachineGroup@0
