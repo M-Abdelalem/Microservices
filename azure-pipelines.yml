@@ -66,7 +66,7 @@ stages:
                   inputs:
                     buildType: 'current'
                     artifactName: 'drop'
-                    targetPath: '$(Pipeline.Workspace)\drop'
+                    targetPath: '$(Pipeline.Workspace)\drop\Gateway\Gateway\bin\Release\net6.0'
 
                 - task: IISWebAppManagementOnMachineGroup@0
                   inputs:
@@ -93,13 +93,13 @@ stages:
                     StartStopWebsiteName: '${{ variables.IISWebsiteName }}'
                     EnableIIS: true
               
-                - script: echo $(Pipeline.Workspace)\drop\Microservices\Gateway\Gateway
+                - script: echo '$(Pipeline.Workspace)\drop\Gateway\Gateway\bin\Release\net6.0'
                 - task: IISWebAppDeploymentOnMachineGroup@0
                   name: 'DeployIIS'
                   displayName: 'Deploy IIS website'                
                   inputs:
                     WebSiteName: '${{ variables.IISWebsiteName }}'
-                    Package: '$(Pipeline.Workspace)\drop\Microservices\Gateway\Gateway'
+                    Package: '$(Pipeline.Workspace)\drop\Gateway\Gateway\bin\Release\net6.0'
                     TakeAppOfflineFlag: true
                 - task: PublishBuildArtifacts@1
 
