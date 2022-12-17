@@ -34,11 +34,21 @@ stages:
              msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
              platform: '$(buildPlatform)'
              configuration: '$(buildConfiguration)'
-  
          - task: VSTest@2
            inputs:
              platform: '$(buildPlatform)'
              configuration: '$(buildConfiguration)'
+         - task: CopyFiles@2
+           displayName: 'Copy '
+           inputs:
+             contents: '**'
+             targetFolder: '$(Build.ArtifactStagingDirectory)'
+
+         - publish: '$(Build.ArtifactStagingDirectory)'
+           displayName: 'Publish '
+           artifact: drop
+  
+
   - stage: DeployWebsite
     displayName: 'Deploy website'
     pool:
@@ -52,16 +62,12 @@ stages:
            deploy:
             steps:
                 - checkout: none
-                - task: PublishPipelineArtifact@1
-                  inputs:
-                     artifact: 'drop'
-                     publishLocation: pipeline
-                     targetPath: '$(Pipeline.Workspace)'
                 - task: DownloadPipelineArtifact@2
                   inputs:
                     buildType: 'current'
                     artifactName: 'drop'
-                    targetPath: '$(Pipeline.Workspace)'
+                    targetPath: '$(Pipeline.Workspace)\drop'
+
                 - task: IISWebAppManagementOnMachineGroup@0
                   inputs:
                     EnableIIS: true
@@ -95,7 +101,8 @@ stages:
                     WebSiteName: '${{ variables.IISWebsiteName }}'
                     Package: '$(Pipeline.Workspace)\drop\Microservices\Gateway\Gateway'
                     TakeAppOfflineFlag: true
-                
+                - task: PublishBuildArtifacts@1
+
                 - task: IISWebAppManagementOnMachineGroup@0
                   name: 'StartIIS'
                   displayName: 'Start IIS website'                     
