@@ -63,6 +63,21 @@ stages:
                     artifactName: 'drop'
                     targetPath: '$(Pipeline.Workspace)'
                 - task: IISWebAppManagementOnMachineGroup@0
+                  inputs:
+                    EnableIIS: true
+                    IISDeploymentType: 'IISWebsite'
+                    ActionIISWebsite: 'CreateOrUpdateWebsite'
+                    WebsiteName: '${{ variables.IISWebsiteName }}'
+                    WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot'
+                    WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
+                    AddBinding: true
+                    CreateOrUpdateAppPoolForWebsite: true
+                    ConfigureAuthenticationForWebsite: true
+                    AppPoolNameForWebsite: '${{ variables.IISWebsiteName }}'
+                    DotNetVersionForWebsite: 'v4.0'
+                    PipeLineModeForWebsite: 'Integrated'
+                    AppPoolIdentityForWebsite: 'ApplicationPoolIdentity'
+                - task: IISWebAppManagementOnMachineGroup@0
                   name: 'StopIIS'
                   displayName: 'Stop IIS website'
                   inputs:
@@ -70,7 +85,7 @@ stages:
                     ActionIISWebsite: 'StopWebsite'
                     StartStopWebsiteName: '${{ variables.IISWebsiteName }}'
                     EnableIIS: true
-
+              
                 - script: echo $(Pipeline.Workspace)\buildPipeline\Microservices\Gateway\Gateway
                 - task: IISWebAppDeploymentOnMachineGroup@0
                   name: 'DeployIIS'
