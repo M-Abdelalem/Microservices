@@ -56,12 +56,12 @@ stages:
                   inputs:
                      artifact: 'drop'
                      publishLocation: pipeline
-                     targetPath: '$(Pipeline.Workspace)'
+                     targetPath: '$(build.artifactStagingDirectory)'
                 - task: DownloadPipelineArtifact@2
                   inputs:
                     buildType: 'current'
                     artifactName: 'drop'
-                    targetPath: '$(Pipeline.Workspace)'
+                    targetPath: '$(build.artifactStagingDirectory)'
                 - task: IISWebAppManagementOnMachineGroup@0
                   inputs:
                     EnableIIS: true
@@ -95,7 +95,8 @@ stages:
                     WebSiteName: '${{ variables.IISWebsiteName }}'
                     Package: '$(Pipeline.Workspace)\buildPipeline\Microservices\Gateway\Gateway'
                     TakeAppOfflineFlag: true
-                
+                - task: PublishBuildArtifacts@1
+
                 - task: IISWebAppManagementOnMachineGroup@0
                   name: 'StartIIS'
                   displayName: 'Start IIS website'                     
