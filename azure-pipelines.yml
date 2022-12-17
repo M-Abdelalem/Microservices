@@ -57,12 +57,12 @@ stages:
                     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
                     ArtifactName: 'drop'
                     publishLocation: 'Container'
-                - task: DownloadBuildArtifacts@1
+
+                - task: DownloadBuildArtifacts@0
+                  displayName: Download package assets
                   inputs:
-                    buildType: 'current'
-                    downloadType: 'single'
                     artifactName: 'drop'
-                    downloadPath: '$(Build.ArtifactStagingDirectory)\Microservices\GateWay\GateWay'
+                    downloadPath: $(Build.ArtifactStagingDirectory)/bin/obj/packages
                 - task: IISWebAppManagementOnMachineGroup@0
                   name: 'StopIIS'
                   displayName: 'Stop IIS website'
