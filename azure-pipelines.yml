@@ -70,7 +70,6 @@ stages:
 
                 - task: IISWebAppManagementOnMachineGroup@0
                   inputs:
-                    EnableIIS: true
                     IISDeploymentType: 'IISWebsite'
                     ActionIISWebsite: 'CreateOrUpdateWebsite'
                     WebsiteName: '${{ variables.IISWebsiteName }}'
@@ -83,7 +82,7 @@ stages:
                     DotNetVersionForWebsite: 'v4.0'
                     PipeLineModeForWebsite: 'Integrated'
                     AppPoolIdentityForWebsite: 'ApplicationPoolIdentity'
-                    Port: 7070
+                    Port: 5656
                 - task: IISWebAppManagementOnMachineGroup@0
                   name: 'StopIIS'
                   displayName: 'Stop IIS website'
@@ -91,7 +90,6 @@ stages:
                     IISDeploymentType: 'IISWebsite'
                     ActionIISWebsite: 'StopWebsite'
                     StartStopWebsiteName: '${{ variables.IISWebsiteName }}'
-                    EnableIIS: true
               
                 - script: echo '$(Pipeline.Workspace)\drop\Gateway\Gateway\bin\Release\net6.0'
                 - task: IISWebAppDeploymentOnMachineGroup@0
