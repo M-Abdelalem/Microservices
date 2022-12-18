@@ -1,0 +1,112 @@
+# ASP.NET
+# Build and test ASP.NET projects.
+# Add steps that publish symbols, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - 'Services/Product/ProductApi/*'
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  IISWebsiteName: 'Product'
+stages:
+  - stage: BuildWebsite
+    displayName: 'Build website' 
+    pool:
+      vmImage: 'windows-latest'
+    jobs:
+    - job: 
+      steps:
+          
+         - task: NuGetToolInstaller@1
+         - task: NuGetCommand@2
+           inputs:
+            restoreSolution: '$(solution)'
+         - task: VSBuild@1
+           inputs:
+             solution: '$(solution)'
+             msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+             platform: '$(buildPlatform)'
+             configuration: '$(buildConfiguration)'
+         - task: VSTest@2
+           inputs:
+             platform: '$(buildPlatform)'
+             configuration: '$(buildConfiguration)'
+         - task: CopyFiles@2
+           displayName: 'Copy '
+           inputs:
+             contents: '**'
+             targetFolder: '$(Build.ArtifactStagingDirectory)'
+
+         - publish: '$(Build.ArtifactStagingDirectory)'
+           displayName: 'Publish '
+           artifact: drop
+  
+
+  - stage: DeployWebsite
+    displayName: 'Deploy website'
+    pool:
+      vmImage: windows-latest
+    jobs:
+    - deployment: DeployWebsite
+      displayName: 'Deploy website'
+      environment: 'MOHAMED-A-ALEEM'
+      strategy:
+       runOnce:
+           deploy:
+            steps:
+                - checkout: none
+                - task: DownloadPipelineArtifact@2
+                  inputs:
+                    buildType: 'current'
+                    artifactName: 'drop'
+                    targetPath: '$(Pipeline.Workspace)\drop\Services\Product\ProductApi\bin\Release\net6.0'
+
+                - task: IISWebAppManagementOnMachineGroup@0
+                  inputs:
+                    EnableIIS: true
+                    IISDeploymentType: 'IISWebsite'
+                    ActionIISWebsite: 'CreateOrUpdateWebsite'
+                    WebsiteName: '${{ variables.IISWebsiteName }}'
+                    WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot'
+                    WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
+                    AddBinding: true
+                    CreateOrUpdateAppPoolForWebsite: true
+                    ConfigureAuthenticationForWebsite: true
+                    AppPoolNameForWebsite: '${{ variables.IISWebsiteName }}'
+                    DotNetVersionForWebsite: 'v4.0'
+                    PipeLineModeForWebsite: 'Integrated'
+                    AppPoolIdentityForWebsite: 'ApplicationPoolIdentity'
+                    Port: 7070
+                - task: IISWebAppManagementOnMachineGroup@0
+                  name: 'StopIIS'
+                  displayName: 'Stop IIS website'
+                  inputs:
+                    IISDeploymentType: 'IISWebsite'
+                    ActionIISWebsite: 'StopWebsite'
+                    StartStopWebsiteName: '${{ variables.IISWebsiteName }}'
+                    EnableIIS: true
+              
+                - script: echo '$(Pipeline.Workspace)\drop\Services\Product\ProductApi\bin\Release\net6.0'
+                - task: IISWebAppDeploymentOnMachineGroup@0
+                  name: 'DeployIIS'
+                  displayName: 'Deploy IIS website'                
+                  inputs:
+                    WebSiteName: '${{ variables.IISWebsiteName }}'
+                    Package: '$(Pipeline.Workspace)\drop\Services\Product\ProductApi\bin\Release\net6.0'
+                    TakeAppOfflineFlag: true
+                - task: PublishBuildArtifacts@1
+
+                - task: IISWebAppManagementOnMachineGroup@0
+                  name: 'StartIIS'
+                  displayName: 'Start IIS website'                     
+                  inputs:
+                    IISDeploymentType: 'IISWebsite'
+                    ActionIISWebsite: 'StartWebsite'
+                    StartStopWebsiteName: '${{ variables.IISWebsiteName }}'
+
